@@ -218,6 +218,15 @@ func main() {
 		setupLog.Info("Skipping setup of Knative Service validating/mutating Webhook, because KServe Serverless setup seems to be disabled in the DataScienceCluster resource.")
 	}
 
+	ctx := ctrl.SetupSignalHandler()
+	if err = (&controllers.NimAccountReconciler{
+		Client: mgr.GetClient(),
+		Log:    ctrl.Log.WithName("controllers").WithName("NimAccountReconciler"),
+	}).SetupWithManager(mgr, ctx); err != nil {
+		setupLog.Error(err, "unable to create controller NIM Account controller")
+		os.Exit(1)
+	}
+
 	//+kubebuilder:scaffold:builder
 
 	if err := mgr.AddHealthzCheck("healthz", healthz.Ping); err != nil {
@@ -231,7 +240,7 @@ func main() {
 	}
 
 	setupLog.Info("starting manager")
-	if err := mgr.Start(ctrl.SetupSignalHandler()); err != nil {
+	if err := mgr.Start(ctx); err != nil {
 		setupLog.Error(err, "problem running manager")
 		os.Exit(1)
 	}

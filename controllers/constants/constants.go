@@ -31,6 +31,8 @@ const (
 	LabelEnableRoute   = "enable-route"
 
 	CapabilityServiceMeshAuthorization = "CapabilityServiceMeshAuthorization"
+
+	FinalizerNimAccount = "nim.opendatahub.io/account_finalizer"
 )
 
 // model registry
