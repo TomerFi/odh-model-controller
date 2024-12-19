@@ -61,16 +61,19 @@ var _ = Describe("NIM Account Controller Test Cases", func() {
 
 		dataCmap := &corev1.ConfigMap{}
 		dataCmapSubject := namespacedNameFromReference(account.Status.NIMConfig)
+		Expect(dataCmapSubject.Name).To(HavePrefix(account.Name + "-"))
 		Expect(cli.Get(ctx, dataCmapSubject, dataCmap)).To(Succeed())
 		Expect(dataCmap.OwnerReferences[0]).To(Equal(expectedOwner))
 
 		runtimeTemplate := &templatev1.Template{}
 		runtimeTemplateSubject := namespacedNameFromReference(account.Status.RuntimeTemplate)
+		Expect(runtimeTemplateSubject.Name).To(HavePrefix(account.Name + "-"))
 		Expect(cli.Get(ctx, runtimeTemplateSubject, runtimeTemplate)).To(Succeed())
 		Expect(runtimeTemplate.OwnerReferences[0]).To(Equal(expectedOwner))
 
 		pullSecret := &corev1.Secret{}
 		pullSecretSubject := namespacedNameFromReference(account.Status.NIMPullSecret)
+		Expect(pullSecretSubject.Name).To(HavePrefix(account.Name + "-"))
 		Expect(cli.Get(ctx, pullSecretSubject, pullSecret)).To(Succeed())
 		Expect(pullSecret.OwnerReferences[0]).To(Equal(expectedOwner))
 
