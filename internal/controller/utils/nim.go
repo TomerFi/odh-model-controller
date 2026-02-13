@@ -420,7 +420,13 @@ func getModelData(logger logr.Logger, runtime NimRuntime, key string) (*NimModel
 		logger.Error(err, "failed to deserialize body")
 		return nil, ""
 	}
-	return model, string(body)
+	// Re-marshal to include only NimModel fields (excludes bloated fields like 'description')
+	minimalJSON, err := json.Marshal(model)
+	if err != nil {
+		logger.Error(err, "failed to serialize minimal model data")
+		return nil, ""
+	}
+	return model, string(minimalJSON)
 }
 
 func handleRequest(logger logr.Logger, req *http.Request) (*http.Response, error) {
